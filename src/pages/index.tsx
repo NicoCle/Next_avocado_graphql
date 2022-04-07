@@ -16,7 +16,9 @@ export const getStaticProps = async () => {
 const HomePage = ({ productList }: { productList: TProduct[] }) => {
   return (
     <Layout>
+      {/*
       <AvoCards products={productList} />
+      */}
     </Layout>
   );
 };
