@@ -1,19 +1,36 @@
 import fetch from "isomorphic-unfetch";
+import { useQuery, gql } from "@apollo/client";
 import AvoCards from "@components/Card";
 import Layout from "src/Layout";
 
-export const getStaticProps = async () => {
-  const response = await fetch("https://next-avocado-two.vercel.app/api/avo");
-  const { data: productList } = await response.json();
-
-  return {
-    props: {
-      productList,
-    },
-  };
+const avoFragment = `
+      id
+      image
+      name
+      createdAt
+      sku
+      price
+      attributes {
+        description
+        taste
+        shape
+        hardiness
+      }     
+`;
+const useAvocado = () => {
+  const query = gql`
+  query {
+    avos {
+      ${avoFragment}
+    }
+  }
+  `;
+  return useQuery(query);
 };
 
-const HomePage = ({ productList }: { productList: TProduct[] }) => {
+const HomePage = () => {
+  const { data, loading } = useAvocado();
+  console.log(data, loading);
   return (
     <Layout>
       {/*
