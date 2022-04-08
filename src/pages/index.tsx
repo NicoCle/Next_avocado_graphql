@@ -1,22 +1,41 @@
-import fetch from "isomorphic-unfetch";
 import AvoCards from "@components/Card";
+import { GetAllAvosDocument, Avocado } from "service/graphql";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import Layout from "src/Layout";
+import client from "service/client";
 
-export const getStaticProps = async () => {
-  const response = await fetch("https://next-avocado-two.vercel.app/api/avo");
-  const { data: productList } = await response.json();
-
-  return {
-    props: {
-      productList,
-    },
-  };
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const response = await client.query({
+      query: GetAllAvosDocument,
+    });
+    if (response.data.avos == null) {
+      throw new Error("error post");
+    }
+    const products = response.data.avos;
+    return {
+      props: {
+        products,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      props: {
+        products: [],
+      },
+    };
+  }
 };
 
-const HomePage = ({ productList }: { productList: TProduct[] }) => {
+const HomePage = ({
+  products,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  console.log({ products });
+
   return (
     <Layout>
-      <AvoCards products={productList} />
+      <AvoCards products={products} />
     </Layout>
   );
 };
