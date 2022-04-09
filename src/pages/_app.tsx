@@ -1,11 +1,7 @@
 import { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
-
-const client = new ApolloClient({
-  uri: "https://platzi-graphql.herokuapp.com/graphql",
-  cache: new InMemoryCache(),
-});
+import { ApolloProvider } from "@apollo/client";
+import client from "service/client";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
